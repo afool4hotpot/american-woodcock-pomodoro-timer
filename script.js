@@ -1,10 +1,12 @@
 const startFocus = document.getElementById('start-focus');
-const startBreak = document.getElementById('start-break');
+const endFocus = document.getElementById('end-focus');
 const endBreak = document.getElementById('end-break');
 const reset = document.getElementById('reset');
 const timerDisplay = document.getElementById('timer');
 const midButtons = document.getElementById('midbuttons');
 const woodcock = document.getElementById('woodcockpng');
+const volToggle = document.getElementById('voltoggle');
+const startBreak = document.getElementById('start-break');
 
 let minutes = 25;
 let seconds = 0;
@@ -21,7 +23,7 @@ function startFocusTimer() {
     }
     startFocus.style.display = 'none';
     midButtons.style.display = 'flex';
-    startBreak.style.display = 'block';
+    endFocus.style.display = 'block';
     reset.style.display = 'block';
     endBreak.style.display = 'none';
     woodcock.src = 'assets/woodcock-cropped.gif';
@@ -46,7 +48,7 @@ function startFocusTimer() {
             meep.play();
             startFocus.style.display = 'none';
             midButtons.style.display = 'flex';
-            startBreak.style.display = 'block';
+            endFocus.style.display = 'block';
             reset.style.display = 'none';
             endBreak.style.display = 'none';
         }
@@ -55,19 +57,18 @@ function startFocusTimer() {
 
 function startBreakTimer(){
     clearInterval(timer);
+    minutes = 5;
+    seconds = 0;
     startFocus.style.display = 'none';
     midButtons.style.display = 'none';
-    startBreak.style.display = 'none';
+    endFocus.style.display = 'none';
     reset.style.display = 'none';
     endBreak.style.display = 'block';
+    startBreak.style.display = 'none';
     if (meep){
         meep.pause();
         meep.currentTime = 0;
     }
-    minutes = 5;
-    seconds = 0;
-    startBreak.style.display = 'none';
-    endBreak.style.display = 'block';
     
     woodcock.src = 'assets/woodcock-cropped.gif';
     timer =setInterval(() => {
@@ -98,7 +99,7 @@ function startBreakTimer(){
 function resetTimer(){
     startFocus.style.display = 'block';
     midButtons.style.display = 'none';
-    startBreak.style.display = 'none';
+    endFocus.style.display = 'none';
     reset.style.display = 'none';
     endBreak.style.display = 'none';
     if (meep){
@@ -115,14 +116,57 @@ function resetTimer(){
     startFocus.style.display = 'block';
 }
 
+function toggleVolume(){
+    if (meep){
+        if (meep.isMuted){
+            meep.muted = false;
+            volToggle.src = 'assets/volon.png';
+        } else {
+            meep.muted = true;
+            volToggle.src = 'assets/voloff.png';
+        }
+    } else {
+        if (volToggle.src.includes('volon.png')){
+            volToggle.src = 'assets/voloff.png';
+        } else {
+            volToggle.src = 'assets/volon.png';
+        }
+    }
+}
+
+function moveToBreak(){
+    clearInterval(timer);
+    startFocus.style.display = 'none';
+    midButtons.style.display = 'none';
+    endFocus.style.display = 'none';
+    reset.style.display = 'none';
+    endBreak.style.display = 'none';
+    woodcock.src = 'assets/woodcock-idle-cropped.png';
+
+    if (meep){
+        meep.pause();
+        meep.currentTime = 0;
+    }
+
+    startBreak.style.display ='block';
+    minutes = 5;
+    seconds = 0;
+
+    timerDisplay.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+}
+
 startFocus.addEventListener('click', startFocusTimer);
-startBreak.addEventListener('click', startBreakTimer);
+endFocus.addEventListener('click', moveToBreak);
 endBreak.addEventListener('click', resetTimer);
 reset.addEventListener('click', resetTimer);
+volToggle.addEventListener('click', toggleVolume);
+startBreak.addEventListener('click', startBreakTimer);
+
+document.querySelector('.nav img:nth-child(3)').addEventListener('click', toggleVolume);
 
 document.querySelector('.nav img:first-child').addEventListener('click', () => {
     window.electronAPI.closeWindow();
 });
-document.querySelector('.nav img:last-child').addEventListener('click', () => {
+document.querySelector('.nav img:nth-child(2)').addEventListener('click', () => {
     window.electronAPI.minimizeWindow();
 });

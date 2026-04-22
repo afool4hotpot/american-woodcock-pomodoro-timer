@@ -54,6 +54,7 @@ body {
   image-rendering: pixelated;
   width: 90%;
   height: auto;
+  filter: drop-shadow(0px 2px 8px rgba(25, 10, 8, 0.25));
 }
 
 .nav {
@@ -65,7 +66,12 @@ body {
   width: 21px;
   height: 21px;
   image-rendering: pixelated;
+  cursor: pointer;
   -webkit-app-region: no-drag;
+}
+
+#nav img:hover {
+  opacity: 0.3;
 }
 
 .titlesection{
@@ -103,7 +109,7 @@ h2 {
   text-shadow: 0px 2px 4px rgba(0,0,0,0.25);
 }
 
-#start-focus, #end-break {
+#start-focus, #end-break, #start-break {
   border: none;
   outline: none;
   background: #230007;
@@ -127,6 +133,10 @@ h2 {
   display: none;
 }
 
+#start-break {
+  display: none;
+}
+
 #midbuttons {
   display: none;
   flex-direction: row;
@@ -134,7 +144,7 @@ h2 {
   width: 100%;
 }
 
-#reset {
+#reset, #end-focus {
   border: none;
   outline: none;
   background: #230007;
@@ -154,7 +164,7 @@ h2 {
   outline: none;
   background: #230007;
   color: #e6d4b9;
-  font-size: 16px;
+  font-size: 20px;
   padding: 8px 16px;
   border-radius: 8px;
   height: 51px;
